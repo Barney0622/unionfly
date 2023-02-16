@@ -1,0 +1,13 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb://localhost:27017/unionfly
+      username: unionfly
+      password: unionfly
+
+server:
+  security:
+    permitUrl: /api/user/auth/login
+
+jwt:
+  expiration: 18000
