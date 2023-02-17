@@ -12,16 +12,16 @@ class UserTest {
     private UserRepository userRepository;
 
     @Test
-    void getUser(){
+    void getUser() {
         String testName = "test";
 
-        User user = userRepository.findByName(testName);
+        User user = userRepository.findByName(testName).orElse(null);
 
         System.out.println(user);
     }
 
     @Test
-    void getAllUser(){
+    void getAllUser() {
         userRepository.findAll().forEach(System.out::println);
     }
 }
