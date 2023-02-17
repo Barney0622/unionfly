@@ -7,7 +7,7 @@ spring:
 
 server:
   security:
-    permitUrl: /api/user/auth/login
+    permitUrl: /api/user/auth/login,/api/user/auth/register
 
 jwt:
   expiration: 18000
