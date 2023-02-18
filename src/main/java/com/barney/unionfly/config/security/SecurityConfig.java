@@ -20,12 +20,14 @@ public class SecurityConfig {
     private final JwtTokenFilter jwtTokenFilter;
     @Value("${server.security.permitUrl}")
     private String[] permitUrl;
+    @Value("${server.security.permitAuthUrl}")
+    private String permitAuthUrl;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/api/user/auth/**").permitAll()
+                .antMatchers(HttpMethod.POST, permitAuthUrl).permitAll()
                 .antMatchers(permitUrl).permitAll()
                 .anyRequest().authenticated()
                 .and()

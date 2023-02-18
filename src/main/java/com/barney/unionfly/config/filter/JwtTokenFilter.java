@@ -32,10 +32,11 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtTokenFilter extends OncePerRequestFilter {
-    private static final String BEARER_PREFIX = "Bearer ";
     private final JwtUserDetailService jwtUserDetailService;
     private final JwtService jwtService;
     private final ObjectMapper objectMapper;
+    @Value("${server.jwt.prefix}")
+    private String prefix;
     @Value("${server.security.permitUrl}")
     private String[] permitUrl;
 
@@ -45,19 +46,16 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-
-        log.info("request URL: {}", request.getRequestURL());
-
         String authorizationHeader = getAuthorizationHeader(request);
 
-        if (StringUtils.isBlank(authorizationHeader) || BooleanUtils.isFalse(authorizationHeader.startsWith(BEARER_PREFIX))) {
+        if (StringUtils.isBlank(authorizationHeader) || BooleanUtils.isFalse(authorizationHeader.startsWith(prefix))) {
             log.warn("JWT is empty or not start with Bearer");
             throwError401(response);
             return;
         }
 
         String name;
-        String jwtToken = authorizationHeader.substring(BEARER_PREFIX.length());
+        String jwtToken = authorizationHeader.substring(prefix.length());
 
         Jws<Claims> jws;
         try {
@@ -73,8 +71,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         UserDetails userDetails = jwtUserDetailService.loadUserByUsername(name);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-        log.info("filter is working");
 
         filterChain.doFilter(request, response);
     }
