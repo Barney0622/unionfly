@@ -19,4 +19,9 @@ public class UserController {
         return userService.getMyselfName(token);
     }
 
+    @GetMapping("/name")
+    public UserVoRes getUserName() {
+        return userService.getSecurityContextHolderUsername();
+    }
+
 }
