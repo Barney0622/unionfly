@@ -1,5 +1,6 @@
 package com.barney.unionfly.config.security;
 
+import com.barney.unionfly.config.exception.Error401;
 import com.barney.unionfly.domain.user.User;
 import com.barney.unionfly.service.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,7 +24,7 @@ public class JwtUserDetailService implements UserDetailsService {
         User user = userService.findByName(username);
 
         if (ObjectUtils.isEmpty(user)) {
-            throw new UsernameNotFoundException("User not found whit username: " + username);
+            throw new Error401("User not found whit username: " + username);
         }
 
         return new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(), new ArrayList<>());

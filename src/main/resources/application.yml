@@ -8,6 +8,7 @@ spring:
 server:
   security:
     permitUrl: /api/user/auth/login,/api/user/auth/register
-
-jwt:
-  expiration: 18000
+    permitAuthUrl: /api/user/auth/**
+  jwt:
+    expiration: 18000
+    prefix: "Bearer "

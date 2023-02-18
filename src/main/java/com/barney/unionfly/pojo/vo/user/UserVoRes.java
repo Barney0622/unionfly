@@ -11,5 +11,4 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserVoRes {
     private String name;
-    private String text;
 }
