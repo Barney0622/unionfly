@@ -5,17 +5,17 @@ import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
+import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.security.Key;
 import java.util.Date;
 
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-public class JwtUtils {
-    private static final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+@Component
+public class JwtService implements Serializable {
+    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
-    public static String createJwt(String subject) {
+    public String createJwt(String subject) {
         Date now = new Date();
         Date expirationDate = new Date(now.getTime() + 18000000);
 
@@ -27,7 +27,7 @@ public class JwtUtils {
                 .compact();
     }
 
-    public static Jws<Claims> parseJwt(String token) {
+    public Jws<Claims> parseJwt(String token) {
         String tokenWithoutBear = token.replace("Bearer ", "");
         return Jwts.parserBuilder()
                 .setSigningKey(key)

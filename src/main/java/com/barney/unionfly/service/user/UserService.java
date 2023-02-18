@@ -1,6 +1,6 @@
 package com.barney.unionfly.service.user;
 
-import com.barney.unionfly.config.security.JwtUtils;
+import com.barney.unionfly.config.security.JwtService;
 import com.barney.unionfly.domain.user.User;
 import com.barney.unionfly.pojo.dto.user.UserDto;
 import com.barney.unionfly.pojo.vo.user.UserVoRes;
@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final JwtService jwtService;
 
     public User findByName(String name) {
         return userRepository.findByName(name).orElse(null);
@@ -29,7 +30,7 @@ public class UserService {
     }
 
     public UserVoRes getMyselfName(String token) {
-        String name = JwtUtils.parseJwt(token).getBody().getSubject();
+        String name = jwtService.parseJwt(token).getBody().getSubject();
 
         return UserVoRes.builder()
                 .name(name)

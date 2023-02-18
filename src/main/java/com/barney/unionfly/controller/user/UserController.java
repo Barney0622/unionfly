@@ -19,8 +19,4 @@ public class UserController {
         return userService.getMyselfName(token);
     }
 
-    @GetMapping("")
-    public String getTestData() {
-        return "ok";
-    }
 }

@@ -2,7 +2,7 @@ package com.barney.unionfly.service.user.auth;
 
 import com.barney.unionfly.config.exception.Error400;
 import com.barney.unionfly.config.exception.Error401;
-import com.barney.unionfly.config.security.JwtUtils;
+import com.barney.unionfly.config.security.JwtService;
 import com.barney.unionfly.domain.user.User;
 import com.barney.unionfly.pojo.dto.user.UserDto;
 import com.barney.unionfly.pojo.vo.user.auth.LoginAuthVoReq;
@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 public class AuthService {
     private final UserService userService;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final JwtService jwtService;
 
     public LoginAuthVoRes login(LoginAuthVoReq req) {
         User user = userService.findByName(req.getName());
@@ -28,7 +29,7 @@ public class AuthService {
             throw new Error401("name or password incorrect");
         }
 
-        String token = JwtUtils.createJwt(user.getName());
+        String token = jwtService.createJwt(user.getName());
         return LoginAuthVoRes.builder().token(token).build();
     }
 
