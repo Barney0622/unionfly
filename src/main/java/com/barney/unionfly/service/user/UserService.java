@@ -1,5 +1,6 @@
 package com.barney.unionfly.service.user;
 
+import com.barney.unionfly.config.security.JwtUtils;
 import com.barney.unionfly.domain.user.User;
 import com.barney.unionfly.pojo.dto.user.UserDto;
 import com.barney.unionfly.pojo.vo.user.UserVoRes;
@@ -27,11 +28,11 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public UserVoRes getTestData() {
-        User user = findByName("test");
+    public UserVoRes getMyselfName(String token) {
+        String name = JwtUtils.parseJwt(token).getBody().getSubject();
+
         return UserVoRes.builder()
-                .name(user.getName())
-                .text("測試api")
+                .name(name)
                 .build();
     }
 }

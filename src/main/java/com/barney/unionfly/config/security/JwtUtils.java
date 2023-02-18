@@ -28,10 +28,10 @@ public class JwtUtils {
     }
 
     public static Jws<Claims> parseJwt(String token) {
+        String tokenWithoutBear = token.replace("Bearer ", "");
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
-                .parseClaimsJws(token);
+                .parseClaimsJws(tokenWithoutBear);
     }
-
 }

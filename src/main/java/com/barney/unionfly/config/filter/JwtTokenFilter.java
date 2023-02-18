@@ -1,7 +1,9 @@
 package com.barney.unionfly.config.filter;
 
+import com.barney.unionfly.config.exception.Error401;
 import com.barney.unionfly.config.security.JwtUserDetailService;
 import com.barney.unionfly.config.security.JwtUtils;
+import com.barney.unionfly.enums.error_code.ErrorCode401;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +37,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        log.info("JwtTokenFilter doFilterInternal() is called");
-
         if (isPermitUrl(request.getServletPath())) {
             filterChain.doFilter(request, response);
             return;
@@ -48,17 +48,20 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
         if (StringUtils.isBlank(authorizationHeader) || BooleanUtils.isFalse(authorizationHeader.startsWith(BEARER_PREFIX))) {
             log.warn("JWT is empty or not start with Bearer");
-            throw new ServletException("Unauthorized");
+            throw new Error401(ErrorCode401.UNAUTHORIZED);
         }
 
         String name;
         String jwtToken = authorizationHeader.substring(BEARER_PREFIX.length());
 
         Jws<Claims> jws = JwtUtils.parseJwt(jwtToken);
+
         name = jws.getBody().getSubject();
         UserDetails userDetails = jwtUserDetailService.loadUserByUsername(name);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        log.info("filter is working");
 
         filterChain.doFilter(request, response);
     }

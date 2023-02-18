@@ -5,7 +5,6 @@ import com.barney.unionfly.pojo.vo.user.auth.LoginAuthVoRes;
 import com.barney.unionfly.pojo.vo.user.auth.RegisterVoReq;
 import com.barney.unionfly.service.user.auth.AuthService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,12 +20,12 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public ResponseEntity<LoginAuthVoRes> login(@RequestBody @Valid LoginAuthVoReq req) {
+    public LoginAuthVoRes login(@RequestBody @Valid LoginAuthVoReq req) {
         return authService.login(req);
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> register(@RequestBody @Valid RegisterVoReq req) {
-        return authService.register(req);
+    public void register(@RequestBody @Valid RegisterVoReq req) {
+        authService.register(req);
     }
 }
